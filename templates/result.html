@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Data and Graph Viewer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
+    <script> src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto my-8 content-">
+        <div class="w-full max-w-2xl mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <a href="http://127.0.0.1:5000/">
+                <h1 class="block w-full text-center text-gray-800 text-2xl font-bold mb-6">Stock Data and Graph</h1>
+            </a>
+            <form id="stockForm" class="mb-4" action="/" method="GET">
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="symbol" name="symbol" placeholder="Enter Stock Symbol e.g., AAPL">
+                <button class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Get Data</button>
+            </form>
+            <div id="stockData" class="mt-4">
+                <div class="flex justify-between mt-4">
+                    <a href="/graph/{{ symbol }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Graph</a>
+                    <a href="/balance_sheet/{{ symbol }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Balance Sheet</a>
+                    <a href="/cash_flow/{{ symbol }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cash Flow</a>
+
+                </div>
+                <div style="text-align:center; margin-top: 10px;" class="text-lg font-bold">{{ symbol }} Stock Data</div>
+                <div style="text-align:center;" class="mt-2">
+                    <div><strong>Previous Close:</strong> {{ data['Previous Close'] }}</div>
+                    <div><strong>Open:</strong> {{ data['Open'] }}</div>
+                    <div><strong>Day's Range:</strong> {{ data['Day\'s Range'] }}</div>
+                    <div><strong>52 Week Range:</strong> {{ data['52 Week Range'] }}</div>
+                    <div><strong>Volume:</strong> {{ data['Volume'] }}</div>
+                    <div><strong>Market Cap (Intraday):</strong> {{ data['Market Cap (Intraday)'] }}</div>
+                    <div><strong>Beta (5Y Monthly):</strong> {{ data['Beta (5Y Monthly)'] }}</div>
+                </div>
+            </div>
+            <div id="plotGraph" class="mt-4"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('stockForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const symbol = document.getElementById('symbol').value;
+            window.location.href = `/${symbol.toLowerCase()}`;
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var symbol = "{{ symbol }}";
+            fetch(`/graph/${symbol}`)
+                .then(response => response.json())
+                .then(graphData => {
+                    Plotly.newPlot('plotGraph', graphData.data , graphData.layout);
+                })
+                .catch(error => console.error('Error fetching graph data:', error));
+        });
+    </script>
+</body>
+</html>

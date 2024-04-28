@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Income Statement</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Income Statement for {{ symbol }}</h1>
+    {% if income_statement %}
+        <table>
+            <thead>
+                <!-- Create a header row with financial item names -->
+                <tr>
+                    <th>Date</th>
+                    {% for key in income_statement.values()|first %}
+                        <th>{{ key }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Create rows for each date with corresponding data -->
+                {% for date, data in income_statement.items() %}
+                    <tr>
+                        <td>{{ date }}</td>
+                        {% for value in data.values() %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
+</body>
+</html>

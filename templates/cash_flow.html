@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Flow Data</title>
+</head>
+<body>
+    <h1 style="text-align:center;">Cash Flow Data </h1>
+    <table style="margin-left:auto; margin-right: auto;" border="1">
+        <thead>
+            <tr>
+                <th>Date</th>
+                {% for column in cash_flow_data.columns %}
+                <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in cash_flow_data.iterrows() %}
+            <tr>
+                <td>{{ index }}</td>
+                {% for item in row %}
+                <td>{{ item }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ symbol.upper() }} Closing Prices</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div id="plotGraph" style="width: 100%; height: 500px;"></div>
+
+    <script>
+        var graphJson = {{ graph_json | safe }};
+        var layout = graphJson.layout;
+
+        // Override the title in layout with the symbol-specific title
+        layout.title.text = "{{ symbol.upper() }} Closing Prices";
+
+        // Render the Plotly graph using the JSON data and layout
+        Plotly.newPlot('plotGraph', graphJson.data, layout);
+    </script>
+</body>
+</html>
